@@ -45,6 +45,7 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
+import PrivateRoute from "components/PrivateRoute";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -91,16 +92,31 @@ export default function App() {
   //   document.scrollingElement.scrollTop = 0;
   // }, [pathname]);
 
+  const isAuthenticated = !!localStorage.getItem("authToken");
+
+
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
         return getRoutes(route.collapse);
       }
-
+  
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        if (route.key === "sign-in") {
+          // Страница входа всегда доступна
+          return <Route path={route.route} element={route.component} key={route.key} />;
+        }
+  
+        // Оборачиваем в PrivateRoute
+        return (
+          <Route
+            path={route.route}
+            element={<PrivateRoute>{route.component}</PrivateRoute>}
+            key={route.key}
+          />
+        );
       }
-
+  
       return null;
     });
 
@@ -131,7 +147,7 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === "dashboard" && (
+      {layout === "dashboard" && isAuthenticated && (
         <>
           <Sidenav
             color={sidenavColor}
@@ -148,7 +164,12 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route
+          path="*"
+          element={
+            isAuthenticated ? <Navigate to="/myads" /> : <Navigate to="/authentication/sign-in" />
+          }
+        />
       </Routes>
     </ThemeProvider>
   )

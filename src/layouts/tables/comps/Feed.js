@@ -50,55 +50,57 @@ const Feed = ({ ads, loading, setCurrentAd, onOpen }) => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Grid container spacing={3}>
-        {ads.map((ad) => (
-          <Grid item xs={12} sm={6} md={4} key={ad.id}>
-            <StyledCard>
-              {ad.images && ad.images.length > 0 && (
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={`${ad.images[0]}`}
-                  alt={ad.title}
-                  sx={{ objectFit: 'cover', borderRadius: 0 }}
-                />
-              )}
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Chip label={ad.category} color="primary" size="small" />
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <PhoneIcon color="action" fontSize="small" />
-                    <Typography variant="body2" color="text.secondary" sx={{ ml: 0.5 }}>
-                      {ad.contact_phone}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Typography gutterBottom variant="h6" component="div">
-                  {ad.title}
+    <Box sx={{ py: 4, width: "100%" }}>
+  <Grid container spacing={3}>
+    {ads.map((ad) => (
+      <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={ad.id}>
+        <StyledCard>
+          {ad.images?.length > 0 && (
+            <CardMedia
+              component="img"
+              height="240"
+              image={ad.images[0]}
+              alt={ad.title}
+              sx={{ objectFit: 'cover', borderRadius: 0 }}
+            />
+          )}
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Chip label={ad.category} color="primary" size="small" />
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <PhoneIcon color="action" fontSize="small" />
+                <Typography variant="body2" color="text.secondary" sx={{ ml: 0.5 }}>
+                  {ad.contact_phone}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}>
-                  {ad.description}
-                </Typography>
-                <MDBox sx={{display: "flex", justifyContent: "space-between", mt: 2}}>           
-                    <MDBox>
-                    </MDBox>
-
-                   <Chip label={ad.author} color="secondary" size="small" />
-                </MDBox>
-                
-              </CardContent>
-            </StyledCard>
-          </Grid>
-        ))}
+              </Box>
+            </Box>
+            <Typography gutterBottom variant="h6" component="div">
+              {ad.title}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {ad.description}
+            </Typography>
+            <MDBox sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <MDBox />
+              <Chip label={ad.author} color="secondary" size="small" />
+            </MDBox>
+          </CardContent>
+        </StyledCard>
       </Grid>
-    </Container>
+    ))}
+  </Grid>
+</Box>
+
   );
 };
 
