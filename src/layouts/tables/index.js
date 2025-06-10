@@ -12,8 +12,10 @@ import { GET_CATEGORIES } from "constants/crud";
 import CategorySelect from "./comps/CategorySelect";
 import { BASE_URL } from "constants/crud";
 import EditAdModal from "components/EditAdModal";
+import { useTranslation } from "react-i18next";
 
 function Tables() {
+  const { t } = useTranslation();
   const [ads, setAds] = useState([])
   const [loading, setLoading] = useState(false)
   const [citiesList, setCitiesList] = useState([])
@@ -102,7 +104,7 @@ function Tables() {
 
         </div>
         {
-          (selectedCity === 0) ? <></> : <>Все объявления по городу</>
+          (selectedCity === 0) ? <></> : <>{t('tables.allAdsByCity')}</>
         }
         
         {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -10,12 +10,19 @@ import {
   Chip,
   IconButton,
   CircularProgress,
-  Icon
+  Icon,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { styled } from '@mui/material/styles';
 import { BASE_URL } from 'constants/crud';
 import MDBadge from 'components/MDBadge';
+import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(3),
@@ -27,6 +34,26 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));  
 
 const Feed = ({ ads, loading, onOpen, setCurrentAd }) => {
+  const { t } = useTranslation();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedAdId, setSelectedAdId] = useState(null);
+
+  const handleDeleteClick = (adId) => {
+    setSelectedAdId(adId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`${BASE_URL}/ads/delete/${selectedAdId}`);
+      setDeleteDialogOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting ad:', error);
+      alert(t('myads.delete.error'));
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -85,6 +112,7 @@ const Feed = ({ ads, loading, onOpen, setCurrentAd }) => {
                 }}>
                   {ad.description}
                 </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                     <MDBadge color="dark" onClick={()=>{
                             console.log(ad)
                             handleSetCurrentAd(
@@ -99,11 +127,35 @@ const Feed = ({ ads, loading, onOpen, setCurrentAd }) => {
                     }}>
                     <Icon>edit</Icon>
                    </MDBadge>
+                   <MDBadge color="error" onClick={() => handleDeleteClick(ad.id)}>
+                    <Icon>delete</Icon>
+                   </MDBadge>
+                </Box>
               </CardContent>
             </StyledCard>
           </Grid>
         ))}
       </Grid>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>{t('myads.delete.title')}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t('myads.delete.message')}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>
+            {t('myads.delete.cancel')}
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            {t('myads.delete.confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

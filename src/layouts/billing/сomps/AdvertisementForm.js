@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -24,9 +25,8 @@ import CitySelect from 'layouts/tables/comps/CitySelect';
 import { GET_CITIES_LIST } from 'constants/crud';
 import MultiCitySelect from './MultipleCitySelect';
 
-
-
 const AdvertisementForm = ({ onSubmit }) => {
+  const { t } = useTranslation();
   const [citiesList, setCitiesList] = useState([])
   const [categories, setCategories] = useState([])
   const [formData, setFormData] = useState({
@@ -44,7 +44,6 @@ const AdvertisementForm = ({ onSubmit }) => {
   }, [])
 
   const handleChange = (e) => {
-    
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -53,18 +52,18 @@ const AdvertisementForm = ({ onSubmit }) => {
   };
 
   const handleChangeCity = (arr) => {
-      setFormData(prev => ({
-        ...prev,
-        cities: arr
-      }))
-      console.log(arr)
+    setFormData(prev => ({
+      ...prev,
+      cities: arr
+    }))
+    console.log(arr)
   }
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     
     if (files.length + formData.images.length > 5) {
-      alert('Максимальное количество изображений - 5');
+      alert(t('newAd.maxImagesError'));
       return;
     }
 
@@ -100,7 +99,6 @@ const AdvertisementForm = ({ onSubmit }) => {
     setIsSubmitting(true);
     
     try {
-      // Создаем FormData для отправки файлов
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
@@ -108,13 +106,12 @@ const AdvertisementForm = ({ onSubmit }) => {
       formDataToSend.append('category', formData.category);
       formDataToSend.append('cities', formData.cities)
       
-      formData.images.forEach((image, index) => {
+      formData.images.forEach((image) => {
         formDataToSend.append(`images`, image);
       });
 
       await onSubmit(formDataToSend);
       
-      // Сброс формы после успешной отправки
       setFormData({
         description: '',
         contact_phone: '',
@@ -124,7 +121,7 @@ const AdvertisementForm = ({ onSubmit }) => {
       });
       setImagePreviews([]);
     } catch (error) {
-      console.error('Ошибка при отправке объявления:', error);
+      console.error(t('newAd.error'), error);
     } finally {
       setIsSubmitting(false);
     }
@@ -139,12 +136,6 @@ const AdvertisementForm = ({ onSubmit }) => {
     })
   }, [])
 
-  // const handleCityChange = (id) => {
-  //   setSelectedCity(id)
-  //   alert(id)
-  // }
-
-    
   return (
     <div className='NewAdForm'>
       <form onSubmit={handleSubmit}>
@@ -155,7 +146,7 @@ const AdvertisementForm = ({ onSubmit }) => {
             onCitiesChange={handleChangeCity}
           />          
           <TextField
-            label="Описание"
+            label={t('newAd.description')}
             name="description"
             value={formData.description}
             onChange={handleChange}
@@ -165,7 +156,7 @@ const AdvertisementForm = ({ onSubmit }) => {
             fullWidth
           />          
           <TextField
-            label="Контактный телефон"
+            label={t('newAd.phone')}
             name="contact_phone"
             value={formData.contact_phone}
             onChange={handleChange}
@@ -174,12 +165,12 @@ const AdvertisementForm = ({ onSubmit }) => {
             placeholder="996500000000"
           />          
           <FormControl fullWidth required>
-            <InputLabel id="category-label">Категория</InputLabel>
+            <InputLabel id="category-label">{t('newAd.category')}</InputLabel>
             <Select
               labelId="category-label"
               name="category"
               value={formData.category}
-              label="Категория"
+              label={t('newAd.category')}
               onChange={handleChange}
             >
               {categories.map(category => (
@@ -192,28 +183,40 @@ const AdvertisementForm = ({ onSubmit }) => {
           
           <Box>
             <Typography variant="subtitle1" gutterBottom>
-              Изображения (максимум 5)
+              {t('newAd.images')}
             </Typography>
             
             {imagePreviews.length > 0 && (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                 {imagePreviews.map((img, index) => (
-                  <Box key={index} sx={{ position: 'relative' }}>
+                  <Box
+                    key={index}
+                    sx={{
+                      position: 'relative',
+                      width: 100,
+                      height: 100,
+                    }}
+                  >
                     <img
                       src={img.preview}
-                      alt={`Preview ${index}`}
-                      style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 4 }}
+                      alt={`Preview ${index + 1}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '4px'
+                      }}
                     />
                     <IconButton
                       size="small"
-                      sx={{ 
-                        position: 'absolute', 
-                        top: 0, 
-                        right: 0, 
-                        color: 'error.main',
-                        backgroundColor: 'background.paper'
-                      }}
                       onClick={() => handleRemoveImage(index)}
+                      sx={{
+                        position: 'absolute',
+                        top: -8,
+                        right: -8,
+                        bgcolor: 'background.paper',
+                        '&:hover': { bgcolor: 'background.paper' }
+                      }}
                     >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
@@ -226,9 +229,9 @@ const AdvertisementForm = ({ onSubmit }) => {
               component="label"
               variant="outlined"
               startIcon={<CloudUploadIcon />}
-              disabled={formData.images.length >= 5}
+              sx={{ mt: 1 }}
             >
-              Загрузить изображения
+              {t('newAd.uploadImages')}
               <input
                 type="file"
                 hidden
@@ -237,24 +240,19 @@ const AdvertisementForm = ({ onSubmit }) => {
                 onChange={handleImageUpload}
               />
             </Button>
-            
-            <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-              {formData.images.length} / 5 изображений загружено
-            </Typography>
           </Box>
-          
-          {isSubmitting && <LinearProgress />}
           
           <MDButton
             type="submit"
-            variant="contained"
-            color="dark"
-            // size="large"
+            variant="gradient"
+            color="info"
             disabled={isSubmitting}
-            sx={{ mt: 2 }}
+            fullWidth
           >
-            {isSubmitting ? 'Отправка...' : 'Опубликовать объявление'}
+            {t('newAd.submit')}
           </MDButton>
+          
+          {isSubmitting && <LinearProgress />}
         </Box>
       </form>
     </div>

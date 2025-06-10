@@ -37,7 +37,7 @@ import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 
 // Material Dashboard 2 React routes
-import routes from "routes";
+import AppRoutes from "routes";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -61,6 +61,7 @@ export default function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter]   = useState(false);
   const { pathname } = useLocation();
+  const routes = AppRoutes();
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {

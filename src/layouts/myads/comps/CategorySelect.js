@@ -5,8 +5,11 @@ import {
   ToggleButton,
   Typography
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const CategorySelect = ({ categories, selectedCategory, onCategoryChange }) => {
+  const { t } = useTranslation();
+  
   const handleCategoryChange = (event, newCategoryId) => {
     if (newCategoryId !== null) {
       onCategoryChange(newCategoryId);
@@ -16,7 +19,7 @@ const CategorySelect = ({ categories, selectedCategory, onCategoryChange }) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2}}>
       <Typography variant="subtitle1" sx={{ mr: 1 }}>
-        Категория:
+        {t('myads.category')}:
       </Typography>
       <ToggleButtonGroup
         value={selectedCategory}
@@ -42,9 +45,9 @@ const CategorySelect = ({ categories, selectedCategory, onCategoryChange }) => {
           }
         }}
       >
-        <ToggleButton  value={0}>
-            Жалпы
-          </ToggleButton>
+        <ToggleButton value={0}>
+          {t('myads.allCategories')}
+        </ToggleButton>
         {categories.map((category) => (
           <ToggleButton key={category.id} value={category.id}>
             {category.name}

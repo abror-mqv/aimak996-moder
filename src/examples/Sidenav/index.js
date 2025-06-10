@@ -34,6 +34,7 @@ import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React example components
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
+import LanguageSwitcher from "components/LanguageSwitcher";
 
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
@@ -179,7 +180,10 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         }
       />
       <List>{renderRoutes}</List>
-     
+      <MDBox sx={{ flexGrow: 1 }} />
+      <MDBox px={2} pb={2}>
+        <LanguageSwitcher />
+      </MDBox>
     </SidenavRoot>
   );
 }

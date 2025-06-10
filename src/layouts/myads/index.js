@@ -1,5 +1,6 @@
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import { useTranslation } from 'react-i18next';
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -19,6 +20,7 @@ import { BASE_URL } from "constants/crud";
 import EditAdModal from "components/EditAdModal";
 
 function MyAds() {
+  const { t } = useTranslation();
   const [ads, setAds] = useState([])
   const [loading, setLoading] = useState(false)
   const [citiesList, setCitiesList] = useState([])
@@ -109,31 +111,33 @@ function MyAds() {
           selectedCategory={selectedCategory} 
           onCategoryChange={handleCategorySelect} 
         />
-        <div style={{height: "18px"}}>
-
-        </div>
-        {
-          (selectedCity === 0) ? <></> : <>Мои объявления по городу</>
-        }
+        <div style={{height: "18px"}} />
         
-        {
-          (selectedCity === 0) ? <p>Выберите город</p> : <Feed ads={ads} loading={loading} setCurrentAd={setCurrentAd} onOpen={()=>{
-            setModalOpen(true)
-          }}/>
-        }        
+        {selectedCity === 0 ? (
+          <MDTypography variant="h6">{t('myads.noAds')}</MDTypography>
+        ) : (
+          <>
+            <MDTypography variant="h6">{t('myads.title')}</MDTypography>
+            <Feed 
+              ads={ads} 
+              loading={loading} 
+              setCurrentAd={setCurrentAd} 
+              onOpen={() => setModalOpen(true)}
+            />
+          </>
+        )}
       </MDBox>
+
       <EditAdModal
         open={modalOpen}
         handleClose={(shouldReload) => {
           setModalOpen(false);
-          // if (shouldReload) fetchAds(); // обновить список
         }}
         ad={currentAd}
         categories={categories}
         cities={citiesList}
         token={localStorage.authToken}
       />
-
     </DashboardLayout>
   );
 }
