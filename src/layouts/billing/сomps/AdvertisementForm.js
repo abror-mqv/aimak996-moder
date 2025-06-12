@@ -62,7 +62,7 @@ const AdvertisementForm = ({ onSubmit }) => {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     
-    if (files.length + formData.images.length > 5) {
+    if (files.length + formData.images.length > 10) {
       alert(t('newAd.maxImagesError'));
       return;
     }
