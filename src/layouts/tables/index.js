@@ -29,7 +29,8 @@ function Tables() {
     setLoading(true)
     axios.get(`${BASE_URL}/ads/city/${selectedCity}/category/${selectedCategory}`).then(res=>{
       console.log(res.data)
-      setAds(res.data)
+      const { results } = res.data
+      setAds(results || [])
       setLoading(false)
     }).catch(err=>{
       console.log(err)

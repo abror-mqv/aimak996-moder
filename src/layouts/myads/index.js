@@ -39,7 +39,8 @@ function MyAds() {
       }
     }).then(res=>{
       console.log(res.data)
-      setAds(res.data)
+      const { results } = res.data
+      setAds(results || [])
       setLoading(false)
     }).catch(err=>{
       console.log(err)

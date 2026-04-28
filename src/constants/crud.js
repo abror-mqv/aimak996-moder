@@ -1,5 +1,6 @@
-export const BASE_URL = "http://5.59.233.32:8080"
+// export const BASE_URL = "http://5.59.233.32:8080"
 // export const BASE_URL = "http://127.0.0.1:8000"
+export const BASE_URL = "http://176.126.164.86:8000"
 
 
 export const POST_REGISTER = `${BASE_URL}/users/register/`

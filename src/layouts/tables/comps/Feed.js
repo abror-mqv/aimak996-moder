@@ -36,13 +36,14 @@ const Feed = ({ ads, loading, setCurrentAd, onOpen }) => {
     );
   }
 
-  if (!ads || ads.length === 0) {
+  if (!ads || !Array.isArray(ads) || ads.length === 0) {
     return (
       <Typography variant="h6" align="center" sx={{ mt: 4 }}>
         Объявлений не найдено
       </Typography>
     );
   }
+  
 
   const handleSetCurrentAd = (data) => {
     setCurrentAd(data)

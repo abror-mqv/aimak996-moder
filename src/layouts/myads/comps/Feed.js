@@ -62,7 +62,7 @@ const Feed = ({ ads, loading, onOpen, setCurrentAd }) => {
     );
   }
 
-  if (!ads || ads.length === 0) {
+  if (!ads || !Array.isArray(ads) || ads.length === 0) {
     return (
       <Typography variant="h6" align="center" sx={{ mt: 4 }}>
         Объявлений не найдено
